@@ -1,4 +1,5 @@
 package com.codecool.stackoverflowtw.dao.model;
 
-public class Question {
-}
+import java.util.Date;
+
+public class Question {}
