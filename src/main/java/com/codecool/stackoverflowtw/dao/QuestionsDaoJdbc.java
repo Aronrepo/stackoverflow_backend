@@ -59,18 +59,14 @@ public class QuestionsDaoJdbc implements QuestionsDAO {
                 resultSet.getInt("question_id"),
                 resultSet.getString("title"),
                 resultSet.getString("description"),
-                resultSet.getLocalDateTime("created") // TODO change in the record to Date?
+                resultSet.getDate("created")
         );
     }
 
     @Override
     public void save(NewQuestionDTO question) {
-        /*if (findOneQuestionById(question.id()).isPresent()) {
-            return;
-        }*/ //TODO write a new method to check the title?
-
-        String template = "INSERT INTO questions(id,title,description,created)\n" +
-                "VALUES (?,?,?,?);";
+        String template = "INSERT INTO questions(title,description,created)\n" +
+                "VALUES (?,?,?);";
         try (Connection connection = database.getConnection();
              PreparedStatement statement = connection.prepareStatement(template)) {
             prepare(question, statement);
@@ -81,10 +77,10 @@ public class QuestionsDaoJdbc implements QuestionsDAO {
     }
 
     private void prepare(NewQuestionDTO question, PreparedStatement statement) throws SQLException {
-        statement.setInt(1, 1); //TODO add changing id
         statement.setString(1, question.title());
-        statement.setString(1, "some description");
-        statement.setDate(LocalDateTime.now()); //TODO make compatible Date and LocalDateTime
+        statement.setString(2, "some description");
+        Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
+        statement.setDate(3, new java.sql.Date(timestamp.getTime()));
     }
 
     @Override

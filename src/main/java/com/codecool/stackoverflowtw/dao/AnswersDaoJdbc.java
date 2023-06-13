@@ -40,14 +40,14 @@ public class AnswersDaoJdbc implements AnswersDAO {
                 resultSet.getInt("answer_id"),
                 resultSet.getString("answer"),
                 resultSet.getInt("question_id"),
-                resultSet.getLocalDateTime("created") // TODO change in the record to Date?
+                resultSet.getDate("created")
         );
     }
 
     @Override
     public void save(NewAnswerDTO answer) {
-        String template = "INSERT INTO answers(answer_id,answer,question_id,created)\n" +
-                "VALUES (?,?,?,?);";
+        String template = "INSERT INTO answers(answer,question_id,created)\n" +
+                "VALUES (?,?,?);";
         try (Connection connection = database.getConnection();
              PreparedStatement statement = connection.prepareStatement(template)) {
             prepare(answer, statement);
@@ -58,10 +58,10 @@ public class AnswersDaoJdbc implements AnswersDAO {
     }
 
     private void prepare(NewAnswerDTO answer, PreparedStatement statement) throws SQLException {
-        statement.setInt(1, 1); //TODO add changing id
         statement.setString(1, answer.answer());
-        statement.setString(1, "some description");
-        statement.setDate(LocalDateTime.now()); //TODO make compatible Date and LocalDateTime
+        statement.setString(2, "some description");
+        Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
+        statement.setDate(3, new java.sql.Date(timestamp.getTime()));
     }
 
 }
