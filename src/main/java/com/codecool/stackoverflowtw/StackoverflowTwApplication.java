@@ -19,9 +19,9 @@ public class StackoverflowTwApplication {
         SpringApplication.run(StackoverflowTwApplication.class, args);
 
         Database database = new Database(
-                "jdbc:postgresql://localhost:5432/bruteforce_plus_plus",
-                "postgres",
-                "Jelszó");
+                System.getenv("database"),
+                System.getenv("dbuser"),
+                System.getenv("password"));
         Map<String, String> tables = Map.of(
                 "questions", TableStatements.QUESTIONS,
                 "answers", TableStatements.ANSWERS
@@ -32,6 +32,10 @@ public class StackoverflowTwApplication {
 
     @Bean
     public QuestionsDAO questionsDAO() {
-        return new QuestionsDaoJdbc();
+        Database database = new Database(
+                "jdbc:postgresql://localhost:5432/bruteforce_plus_plus",
+                "postgres",
+                "Jelszó");
+        return new QuestionsDaoJdbc(database);
     }
 }
