@@ -23,8 +23,8 @@ public class StackoverflowTwApplication {
                 "postgres",
                 "Jelszó");
         Map<String, String> tables = Map.of(
-                "identification", TableStatements.QUESTIONS,
-                "brute_force_attempt", TableStatements.ANSWERS
+                "questions", TableStatements.QUESTIONS,
+                "answers", TableStatements.ANSWERS
         );
         TableInitializer tableInitializer = new TableInitializer(database, tables);
         tableInitializer.initialize();

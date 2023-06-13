@@ -56,7 +56,7 @@ public class QuestionsDaoJdbc implements QuestionsDAO {
 
     private QuestionDTO toEntity(ResultSet resultSet) throws SQLException {
         return new QuestionDTO(
-                resultSet.getInt("id"),
+                resultSet.getInt("question_id"),
                 resultSet.getString("title"),
                 resultSet.getString("description"),
                 resultSet.getLocalDateTime("created") // TODO change in the record to Date?
