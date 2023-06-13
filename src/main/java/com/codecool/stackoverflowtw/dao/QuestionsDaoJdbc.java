@@ -1,9 +1,12 @@
 package com.codecool.stackoverflowtw.dao;
 
+import com.codecool.stackoverflowtw.controller.dto.NewQuestionDTO;
+import com.codecool.stackoverflowtw.controller.dto.QuestionDTO;
 import com.codecool.stackoverflowtw.dao.model.Question;
 import com.codecool.stackoverflowtw.database.Database;
 
 import java.sql.*;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -15,13 +18,14 @@ public class QuestionsDaoJdbc implements QuestionsDAO {
         this.database = database;
     }
 
-    public Optional<Question> findOneQuestion(String questionToCheck) {
-        String template = "SELECT * FROM questions WHERE question = ?";
+    @Override
+    public Optional<QuestionDTO> findOneQuestionById(int id) {
+        String template = "SELECT * FROM questions WHERE id = ?";
         try (Connection connection = database.getConnection();
              PreparedStatement statement = connection.prepareStatement(template)) {
-            statement.setString(1, questionToCheck);
+            statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
-            Optional<Question> question = Optional.empty();
+            Optional<QuestionDTO> question = Optional.empty();
             if (resultSet.next()) {
                 question = Optional.of(toEntity(resultSet));
             }
@@ -33,14 +37,15 @@ public class QuestionsDaoJdbc implements QuestionsDAO {
         }
     }
 
-    public List<Question> findAllQuestions() {
+    @Override
+    public List<QuestionDTO> findAllQuestions() {
         String query = "SELECT * FROM questions;";
         try (Connection connection = database.getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
-            List<Question> questions = new ArrayList<>();
+            List<QuestionDTO> questions = new ArrayList<>();
             while (resultSet.next()) {
-                Question question = toEntity(resultSet);
+                QuestionDTO question = toEntity(resultSet);
                 questions.add(question);
             }
             return questions;
@@ -49,21 +54,23 @@ public class QuestionsDaoJdbc implements QuestionsDAO {
         }
     }
 
-    private Question toEntity(ResultSet resultSet) throws SQLException {
-        return new Question(
+    private QuestionDTO toEntity(ResultSet resultSet) throws SQLException {
+        return new QuestionDTO(
                 resultSet.getInt("id"),
-                resultSet.getString("question"),
-                resultSet.getInt("user_id")
+                resultSet.getString("title"),
+                resultSet.getString("description"),
+                resultSet.getLocalDateTime("created") // TODO change in the record to Date?
         );
     }
 
-    public void save(Question question) {
-        if (findOneQuestion(question.question()).isPresent()) {
+    @Override
+    public void save(NewQuestionDTO question) {
+        /*if (findOneQuestionById(question.id()).isPresent()) {
             return;
-        }
+        }*/ //TODO write a new method to check the title?
 
-        String template = "INSERT INTO identification(question, user_id)\n" +
-                "VALUES (?,?);";
+        String template = "INSERT INTO questions(id,title,description,created)\n" +
+                "VALUES (?,?,?,?);";
         try (Connection connection = database.getConnection();
              PreparedStatement statement = connection.prepareStatement(template)) {
             prepare(question, statement);
@@ -73,10 +80,13 @@ public class QuestionsDaoJdbc implements QuestionsDAO {
         }
     }
 
-    private void prepare(Question question, PreparedStatement statement) throws SQLException {
-        statement.setString(1, question.question());
-        statement.setInt(2, question.user_id());
+    private void prepare(NewQuestionDTO question, PreparedStatement statement) throws SQLException {
+        statement.setInt(1, 1); //TODO add changing id
+        statement.setString(1, question.title());
+        statement.setString(1, "some description");
+        statement.setDate(LocalDateTime.now()); //TODO make compatible Date and LocalDateTime
     }
+
     @Override
     public void sayHi() {
         System.out.println("Hi DAO!");
