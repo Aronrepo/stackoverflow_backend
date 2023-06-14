@@ -37,6 +37,23 @@ public class QuestionsDaoJdbc implements QuestionsDAO {
         }
     }
 
+    @Override
+    public QuestionDTO getQuestionById(int id) {
+        String template = "SELECT * FROM questions WHERE id = ?";
+        try (Connection connection = database.getConnection();
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(template)) {
+            QuestionDTO question = null;
+            if (resultSet.next()) {
+                question = toEntity(resultSet);
+            }
+            return question;
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public Integer findIdOfQuestionByTitle(String title) {
         String template = "SELECT * FROM questions WHERE title = ?";
         try (Connection connection = database.getConnection();
