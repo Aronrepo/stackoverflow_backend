@@ -11,5 +11,6 @@ public interface QuestionsDAO {
     List<QuestionDTO> findAllQuestions();
     Optional<QuestionDTO> findOneQuestionById(int id);
     void save(NewQuestionDTO question);
+    Integer findIdOfQuestionByTitle(String title);
     void sayHi();
 }
