@@ -75,10 +75,10 @@ public class QuestionsDaoJdbc implements QuestionsDAO {
 
     @Override
     public List<QuestionDTO> findAllQuestions() {
-        String query = "select question_id, title, questions.created, count(*)" +
-                "from questions\n" +
-                "inner join answers using (question_id)\n" +
-                "group by answers.question_id;;";
+        String query = "select q.question_id, q.title, q.description, q.created, count(*) numberOfAnswers\n" +
+                "                from questions q\n" +
+                "                left join answers a using (question_id)\n" +
+                "                group by q.question_id, q.description, q.title, q.created;";
         try (Connection connection = database.getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {

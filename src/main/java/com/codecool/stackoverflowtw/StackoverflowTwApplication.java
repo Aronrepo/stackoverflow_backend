@@ -33,9 +33,9 @@ public class StackoverflowTwApplication {
     @Bean
     public QuestionsDAO questionsDAO() {
         Database database = new Database(
-                "jdbc:postgresql://localhost:5432/bruteforce_plus_plus",
-                "postgres",
-                "Jelszó");
+                System.getenv("database"),
+                System.getenv("dbuser"),
+                System.getenv("password"));
         return new QuestionsDaoJdbc(database);
     }
 }
