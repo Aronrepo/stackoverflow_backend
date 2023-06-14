@@ -8,4 +8,5 @@ import java.util.List;
 public interface AnswersDAO {
     List<AnswerDTO> findAllAnswers();
     void save(NewAnswerDTO answer);
+    Integer findIdOfAnswerByTitle(String answer);
 }

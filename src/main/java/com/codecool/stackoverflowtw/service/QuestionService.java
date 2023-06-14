@@ -36,7 +36,7 @@ public class QuestionService {
     }
 
     public int addNewQuestion(NewQuestionDTO question) {
-        questionsDAO.save(question);// TODO
+        questionsDAO.save(question);
         int createdId = questionsDAO.findIdOfQuestionByTitle(question.title());
         return createdId;
     }

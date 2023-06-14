@@ -34,6 +34,24 @@ public class AnswersDaoJdbc implements AnswersDAO {
             throw new RuntimeException(e);
         }
     }
+    public Integer findIdOfAnswerByTitle(String answer) {
+        String template = "SELECT * FROM answers WHERE answer = ?";
+        try (Connection connection = database.getConnection();
+             PreparedStatement statement = connection.prepareStatement(template)) {
+            statement.setString(1, answer);
+            ResultSet resultSet = statement.executeQuery();
+            int id = 0;
+            if (resultSet.next()) {
+                AnswerDTO answerDTO = toEntity(resultSet);
+                id = answerDTO.question_id();
+            }
+            resultSet.close();
+            return id;
+        } catch (SQLException e) {
+            System.err.println(e);
+            return 0;
+        }
+    }
 
     private AnswerDTO toEntity(ResultSet resultSet) throws SQLException {
         return new AnswerDTO(

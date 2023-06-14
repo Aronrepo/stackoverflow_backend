@@ -27,8 +27,8 @@ public class AnswerService {
     }
 
     public int addNewAnswer(NewAnswerDTO answer) {
-        answersDAO.save(answer);// TODO
-        int createdId = 0;
+        answersDAO.save(answer);
+        int createdId = answersDAO.findIdOfAnswerByTitle(answer.answer());
         return createdId;
     }
 }
