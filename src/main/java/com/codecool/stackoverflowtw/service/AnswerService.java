@@ -16,19 +16,18 @@ public class AnswerService {
         this.answersDAO = answersDAO;
     }
 
-    public List<AnswerDTO> getAllAnswers() {
-        answersDAO.findAllAnswers();// TODO add id and localtime to the questions
-        return List.of(new AnswerDTO(1, "example", 1, LocalDateTime.now()));
+    public List<AnswerDTO> getAllAnswers(int id) {
+        return answersDAO.findAllAnswersForQuestion(id);
+        //return List.of(new AnswerDTO(1, "example", 1, LocalDateTime.now()));
     }
 
     public boolean deleteAnswerById(int id) {
-        // TODO
-        return false;
+        return answersDAO.delete(id);
     }
 
     public int addNewAnswer(NewAnswerDTO answer) {
-        answersDAO.save(answer);// TODO
-        int createdId = 0;
+        answersDAO.save(answer);
+        int createdId = answersDAO.findIdOfAnswerByTitle(answer.answer());
         return createdId;
     }
 }
