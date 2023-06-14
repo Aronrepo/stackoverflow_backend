@@ -19,16 +19,19 @@ public class AnswersDaoJdbc implements AnswersDAO {
     }
 
     @Override
-    public List<AnswerDTO> findAllAnswers() {
-        String query = "SELECT * FROM answers;";
+    public List<AnswerDTO> findAllAnswersForQuestion(int id) {
+        String template = "SELECT * FROM answers" +
+                "WHERE question_id = ?;";
         try (Connection connection = database.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(query)) {
+             PreparedStatement statement = connection.prepareStatement(template)) {
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
             List<AnswerDTO> answers = new ArrayList<>();
             while (resultSet.next()) {
                 AnswerDTO answer = toEntity(resultSet);
                 answers.add(answer);
             }
+            resultSet.close();
             return answers;
         } catch (SQLException e) {
             throw new RuntimeException(e);

@@ -39,7 +39,7 @@ public class QuestionsDaoJdbc implements QuestionsDAO {
 
     @Override
     public QuestionDTO getQuestionById(int id) {
-        String template = "SELECT * FROM questions WHERE id = ?";
+        String template = "SELECT * FROM questions WHERE question_id = ?";
         try (Connection connection = database.getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(template)) {
