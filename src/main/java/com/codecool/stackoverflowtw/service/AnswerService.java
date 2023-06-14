@@ -22,8 +22,7 @@ public class AnswerService {
     }
 
     public boolean deleteAnswerById(int id) {
-        // TODO
-        return false;
+        return answersDAO.delete(id);
     }
 
     public int addNewAnswer(NewAnswerDTO answer) {

@@ -63,7 +63,7 @@ public class QuestionsDaoJdbc implements QuestionsDAO {
             int id = 0;
             if (resultSet.next()) {
                 QuestionDTO question = toEntity(resultSet);
-                id = question.id();
+                id = question.question_id();
             }
             resultSet.close();
             return id;
@@ -121,6 +121,26 @@ public class QuestionsDaoJdbc implements QuestionsDAO {
         statement.setString(2, "some description");
         Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
         statement.setDate(3, new java.sql.Date(timestamp.getTime()));
+    }
+
+    @Override
+    public boolean delete(int id) {
+        if (!findOneQuestionById(id).isPresent()){
+            return false;
+        }
+
+        String deleteQuery = "DELETE FROM questions WHERE question_id = ?";
+        PreparedStatement statement = null;
+
+        try {
+            Connection connection = database.getConnection();
+            statement = connection.prepareStatement(deleteQuery);
+            statement.setInt(1, id);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 
     @Override

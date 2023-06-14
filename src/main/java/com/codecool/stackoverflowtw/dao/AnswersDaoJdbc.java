@@ -10,6 +10,7 @@ import java.sql.*;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class AnswersDaoJdbc implements AnswersDAO {
     private final Database database;
@@ -37,6 +38,25 @@ public class AnswersDaoJdbc implements AnswersDAO {
             throw new RuntimeException(e);
         }
     }
+
+    public Optional<AnswerDTO> findOneAnswerById(int id) {
+        String template = "SELECT * FROM answers WHERE id = ?";
+        try (Connection connection = database.getConnection();
+             PreparedStatement statement = connection.prepareStatement(template)) {
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
+            Optional<AnswerDTO> answer = Optional.empty();
+            if (resultSet.next()) {
+                answer = Optional.of(toEntity(resultSet));
+            }
+            resultSet.close();
+            return answer;
+        } catch (SQLException e) {
+            System.err.println(e);
+            return Optional.empty();
+        }
+    }
+
     public Integer findIdOfAnswerByTitle(String answer) {
         String template = "SELECT * FROM answers WHERE answer = ?";
         try (Connection connection = database.getConnection();
@@ -75,6 +95,25 @@ public class AnswersDaoJdbc implements AnswersDAO {
             statement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @Override
+    public boolean delete(int id) {
+        if (!findOneAnswerById(id).isPresent()) {
+            return false;
+        }
+        String deleteQuery = "DELETE FROM answers WHERE answer_id = ?";
+        PreparedStatement statement = null;
+
+        try {
+            Connection connection = database.getConnection();
+            statement = connection.prepareStatement(deleteQuery);
+            statement.setInt(1, id);
+            return true;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 
