@@ -118,7 +118,7 @@ public class QuestionsDaoJdbc implements QuestionsDAO {
 
     private void prepare(NewQuestionDTO question, PreparedStatement statement) throws SQLException {
         statement.setString(1, question.title());
-        statement.setString(2, "some description");
+        statement.setString(2, question.description());
         Timestamp timestamp = Timestamp.valueOf(LocalDateTime.now());
         statement.setDate(3, new java.sql.Date(timestamp.getTime()));
     }
