@@ -20,8 +20,8 @@ public class QuestionService {
     }
 
     public List<QuestionDTO> getAllQuestions() {
-        questionsDAO.findAllQuestions();// TODO add id and localtime to the questions
-        return List.of(new QuestionDTO(1, "example title", "example desc", LocalDateTime.now()));
+        return questionsDAO.findAllQuestions();
+        //return List.of(new QuestionDTO(1, "example title", "example desc", LocalDateTime.now()));
     }
 
     public QuestionDTO getQuestionById(int id) {

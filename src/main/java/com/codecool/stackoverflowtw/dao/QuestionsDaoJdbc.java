@@ -75,7 +75,10 @@ public class QuestionsDaoJdbc implements QuestionsDAO {
 
     @Override
     public List<QuestionDTO> findAllQuestions() {
-        String query = "SELECT * FROM questions;";
+        String query = "select question_id, title, questions.created, count(*)" +
+                "from questions\n" +
+                "inner join answers using (question_id)\n" +
+                "group by answers.question_id;;";
         try (Connection connection = database.getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
@@ -95,7 +98,8 @@ public class QuestionsDaoJdbc implements QuestionsDAO {
                 resultSet.getInt("question_id"),
                 resultSet.getString("title"),
                 resultSet.getString("description"),
-                resultSet.getDate("created")
+                resultSet.getDate("created"),
+                resultSet.getInt("numberOfAnswers")
         );
     }
 
