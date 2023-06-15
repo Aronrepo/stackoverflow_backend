@@ -1,5 +1,7 @@
 package com.codecool.stackoverflowtw;
 
+import com.codecool.stackoverflowtw.dao.AnswersDAO;
+import com.codecool.stackoverflowtw.dao.AnswersDaoJdbc;
 import com.codecool.stackoverflowtw.dao.QuestionsDAO;
 import com.codecool.stackoverflowtw.dao.QuestionsDaoJdbc;
 import com.codecool.stackoverflowtw.database.Database;
@@ -37,5 +39,14 @@ public class StackoverflowTwApplication {
                 System.getenv("dbuser"),
                 System.getenv("password"));
         return new QuestionsDaoJdbc(database);
+    }
+
+    @Bean
+    public AnswersDAO answersDAO() {
+        Database database = new Database(
+                System.getenv("database"),
+                System.getenv("dbuser"),
+                System.getenv("password"));
+        return new AnswersDaoJdbc(database);
     }
 }
