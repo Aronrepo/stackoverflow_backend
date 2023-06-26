@@ -21,8 +21,8 @@ public class AnswersDaoJdbc implements AnswersDAO {
 
     @Override
     public List<AnswerDTO> findAllAnswersForQuestion(int id) {
-        String template = "SELECT * FROM answers" +
-                "WHERE question_id = ?;";
+        String template = "SELECT * FROM answers " +
+                "WHERE question_id = ?";
         try (Connection connection = database.getConnection();
              PreparedStatement statement = connection.prepareStatement(template)) {
             statement.setInt(1, id);
