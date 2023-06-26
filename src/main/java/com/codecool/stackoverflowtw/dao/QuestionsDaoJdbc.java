@@ -6,6 +6,7 @@ import com.codecool.stackoverflowtw.dao.model.Question;
 import com.codecool.stackoverflowtw.database.Database;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -41,12 +42,14 @@ public class QuestionsDaoJdbc implements QuestionsDAO {
     public QuestionDTO getQuestionById(int id) {
         String template = "SELECT * FROM questions WHERE question_id = ?";
         try (Connection connection = database.getConnection();
-             Statement statement = connection.createStatement();
-             ResultSet resultSet = statement.executeQuery(template)) {
+             PreparedStatement statement = connection.prepareStatement(template)) {
+            statement.setInt(1, id);
+            ResultSet resultSet = statement.executeQuery();
             QuestionDTO question = null;
             if (resultSet.next()) {
                 question = toEntity(resultSet);
             }
+            //System.out.println(question);
             return question;
         } catch (SQLException e) {
             throw new RuntimeException(e);
