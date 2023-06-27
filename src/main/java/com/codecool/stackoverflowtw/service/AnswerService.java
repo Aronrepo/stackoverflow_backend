@@ -6,7 +6,6 @@ import com.codecool.stackoverflowtw.dao.AnswersDAO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 @Service
 public class AnswerService {
@@ -17,7 +16,7 @@ public class AnswerService {
         this.answersDAO = answersDAO;
     }
 
-    public List<AnswerDTO> getAllAnswers(int id) {
+    public List<AnswerDTO> getAllAnswersByQuestion(int id) {
         return answersDAO.findAllAnswersForQuestion(id);
         //return List.of(new AnswerDTO(1, "example", 1, LocalDateTime.now()));
     }
