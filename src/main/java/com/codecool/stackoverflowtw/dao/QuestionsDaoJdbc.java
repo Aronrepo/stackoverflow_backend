@@ -78,10 +78,17 @@ public class QuestionsDaoJdbc implements QuestionsDAO {
 
     @Override
     public List<QuestionDTO> findAllQuestions() {
-        String query = "select q.question_id, q.title, q.description, q.created, count(*) numberOfAnswers\n" +
-                "                from questions q\n" +
-                "                left join answers a using (question_id)\n" +
-                "                group by q.question_id, q.description, q.title, q.created;";
+        String query = "select q.question_id, q.title, q.description, q.created,\n" +
+                "case when\n" +
+                "a.count_answers is not null then a.count_answers\n" +
+                "else 0\n" +
+                "end count_answers\n" +
+                "from questions q\n" +
+                "left join\n" +
+                "(\n" +
+                "select a.question_id, count(a.answer_id) as count_answers from answers a\n" +
+                "group by question_id) as a\n" +
+                "using (question_id)";
         try (Connection connection = database.getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(query)) {
@@ -102,7 +109,7 @@ public class QuestionsDaoJdbc implements QuestionsDAO {
                 resultSet.getString("title"),
                 resultSet.getString("description"),
                 resultSet.getDate("created"),
-                resultSet.getInt("numberOfAnswers")
+                resultSet.getInt("count_answers")
         );
     }
 
