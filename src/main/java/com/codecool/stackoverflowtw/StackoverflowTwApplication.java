@@ -21,9 +21,9 @@ public class StackoverflowTwApplication {
         SpringApplication.run(StackoverflowTwApplication.class, args);
 
         Database database = new Database(
-                System.getenv("database"),
-                System.getenv("dbuser"),
-                System.getenv("password"));
+                System.getenv("SPRING_DATASOURCE_URL"),
+                System.getenv("SPRING_DATASOURCE_USERNAME"),
+                System.getenv("SPRING_DATASOURCE_PASSWORD"));
         Map<String, String> tables = Map.of(
                 "questions", TableStatements.QUESTIONS,
                 "answers", TableStatements.ANSWERS
@@ -35,18 +35,18 @@ public class StackoverflowTwApplication {
     @Bean
     public QuestionsDAO questionsDAO() {
         Database database = new Database(
-                System.getenv("database"),
-                System.getenv("dbuser"),
-                System.getenv("password"));
+                System.getenv("SPRING_DATASOURCE_URL"),
+                System.getenv("SPRING_DATASOURCE_USERNAME"),
+                System.getenv("SPRING_DATASOURCE_PASSWORD"));
         return new QuestionsDaoJdbc(database);
     }
 
     @Bean
     public AnswersDAO answersDAO() {
         Database database = new Database(
-                System.getenv("database"),
-                System.getenv("dbuser"),
-                System.getenv("password"));
+                System.getenv("SPRING_DATASOURCE_URL"),
+                System.getenv("SPRING_DATASOURCE_USERNAME"),
+                System.getenv("SPRING_DATASOURCE_PASSWORD"));
         return new AnswersDaoJdbc(database);
     }
 }
