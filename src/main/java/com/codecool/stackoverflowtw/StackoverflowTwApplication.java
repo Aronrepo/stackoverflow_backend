@@ -1,5 +1,7 @@
 package com.codecool.stackoverflowtw;
 
+import com.codecool.stackoverflowtw.dao.AnswersDAO;
+import com.codecool.stackoverflowtw.dao.AnswersDaoJdbc;
 import com.codecool.stackoverflowtw.dao.QuestionsDAO;
 import com.codecool.stackoverflowtw.dao.QuestionsDaoJdbc;
 import com.codecool.stackoverflowtw.database.Database;
@@ -19,9 +21,9 @@ public class StackoverflowTwApplication {
         SpringApplication.run(StackoverflowTwApplication.class, args);
 
         Database database = new Database(
-                "jdbc:postgresql://localhost:5432/bruteforce_plus_plus",
-                "postgres",
-                "Jelszó");
+                System.getenv("SPRING_DATASOURCE_URL"),
+                System.getenv("SPRING_DATASOURCE_USERNAME"),
+                System.getenv("SPRING_DATASOURCE_PASSWORD"));
         Map<String, String> tables = Map.of(
                 "questions", TableStatements.QUESTIONS,
                 "answers", TableStatements.ANSWERS
@@ -32,6 +34,19 @@ public class StackoverflowTwApplication {
 
     @Bean
     public QuestionsDAO questionsDAO() {
-        return new QuestionsDaoJdbc();
+        Database database = new Database(
+                System.getenv("SPRING_DATASOURCE_URL"),
+                System.getenv("SPRING_DATASOURCE_USERNAME"),
+                System.getenv("SPRING_DATASOURCE_PASSWORD"));
+        return new QuestionsDaoJdbc(database);
+    }
+
+    @Bean
+    public AnswersDAO answersDAO() {
+        Database database = new Database(
+                System.getenv("SPRING_DATASOURCE_URL"),
+                System.getenv("SPRING_DATASOURCE_USERNAME"),
+                System.getenv("SPRING_DATASOURCE_PASSWORD"));
+        return new AnswersDaoJdbc(database);
     }
 }
