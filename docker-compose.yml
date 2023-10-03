@@ -1,0 +1,35 @@
+version: '3.2'
+
+services:
+  backend:
+    build:
+      context: . # Use an image built from the specified dockerfile in the backend directory.
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080" # Forward the exposed port 8080 on the container to port 8080 on the host machine
+    depends_on:
+      - postgresdb
+    env_file:
+      - .env # Reference the .env file for environment variables
+    networks:
+      - backend-network
+
+  postgresdb:
+    image: postgres:13.1-alpine
+    container_name: postgresdb
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=postgres
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - backend-network
+
+networks:
+  backend-network:
+
+volumes:
+  db-data:
